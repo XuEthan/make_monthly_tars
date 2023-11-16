@@ -49,10 +49,25 @@ function stat_month {
     return $m_size
 }
 
-# function to generate script for a given month 
-#function generate_month {
-#
-#}
+# function to generate script contents for a given month 
+function generate_month {
+    local m="$1"
+    local marr=("${@:2}")
+    if [ ${#marr[@]} == 0 ]; then 
+        return 
+    fi
+    tbp="tar -cvf ${sdir}/${tyear}_${m}.tar -C ${tyear} " 
+    dq="\""
+    for f in "${marr[@]}"; do 
+        tbp="$tbp $dq$f$dq "    
+    done
+    echo -e "$tbp\n" >> "$tyear"_generate.sh
+}
+
+# function to preload generated script 
+function pre_load {
+    echo -e "#!/bin/bash" >> "$tyear"_generate.sh
+}
 
 # months in the year 
 months=("01" "02" "03" "04" "05" "06" "07" "08" "09" "10" "11" "12")
@@ -76,8 +91,11 @@ tsize=0
 # create stat file and generate script in the local directory
 create_metaf "$tyear"_stats.txt 
 create_metaf "$tyear"_generate.sh
- 
-# loop through all months of the year 
+
+# preload the shell script 
+pre_load
+
+# loop through all months of the year and process 
 for m in "${months[@]}"; do
     ss="$tyear"_"$m"
     ff=()
@@ -87,11 +105,7 @@ for m in "${months[@]}"; do
     stat_month "$m" "${ff[@]}"
     mts=$?
     tsize=$((tsize + mts))
+    generate_month "$m" "${ff[@]}"    
 done
 
 echo -e "\nTotal size of all monthly tars: ${tsize}" >> "$tyear"_stats.txt
-
-# for testing 
-#for file in "${ff[@]}"; do
-#    echo "$file"
-#done
