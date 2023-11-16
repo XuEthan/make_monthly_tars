@@ -1,0 +1,30 @@
+
+01
+0	/projects/ps-renlab/ecxu/mm_test_dir/01/2021_01_01_fish
+0	/projects/ps-renlab/ecxu/mm_test_dir/01/2021_01_01_taco
+17	/projects/ps-renlab/ecxu/mm_test_dir/01/2021_01_01_chip
+0	/projects/ps-renlab/ecxu/mm_test_dir/14/2021_01_14_taco
+0	/projects/ps-renlab/ecxu/mm_test_dir/14/2021_01_14_fish
+0	/projects/ps-renlab/ecxu/mm_test_dir/14/2021_01_14_chip
+0	/projects/ps-renlab/ecxu/mm_test_dir/2021/2021_01_14_taco
+0	/projects/ps-renlab/ecxu/mm_test_dir/2021/2021_01_14_fish
+17	/projects/ps-renlab/ecxu/mm_test_dir/2021/2021_01_01_chip
+0	/projects/ps-renlab/ecxu/mm_test_dir/2021/2021_01_28_chip
+0	/projects/ps-renlab/ecxu/mm_test_dir/2021/2021_01_14_chip
+0	/projects/ps-renlab/ecxu/mm_test_dir/2021/2021_01_01_fish
+0	/projects/ps-renlab/ecxu/mm_test_dir/2021/2021_01_01_taco
+0	/projects/ps-renlab/ecxu/mm_test_dir/2021/2021_01_28_taco
+0	/projects/ps-renlab/ecxu/mm_test_dir/2021/2021_01_28_fish
+0	/projects/ps-renlab/ecxu/mm_test_dir/28/2021_01_28_chip
+0	/projects/ps-renlab/ecxu/mm_test_dir/28/2021_01_28_taco
+0	/projects/ps-renlab/ecxu/mm_test_dir/28/2021_01_28_fish
+
+06
+0	/projects/ps-renlab/ecxu/mm_test_dir/2021/2021_06_14_fish
+0	/projects/ps-renlab/ecxu/mm_test_dir/2021/2021_06_28_chip
+0	/projects/ps-renlab/ecxu/mm_test_dir/2021/2021_06_01_chip
+
+12
+0	/projects/ps-renlab/ecxu/mm_test_dir/2021/2021_12_28_chip
+0	/projects/ps-renlab/ecxu/mm_test_dir/2021/2021_12_01_chip
+0	/projects/ps-renlab/ecxu/mm_test_dir/2021/2021_12_14_fish
