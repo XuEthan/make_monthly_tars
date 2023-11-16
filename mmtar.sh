@@ -3,7 +3,8 @@
 #TODO:
 # running version
 # take a path to some file set; 
-# -> write stats of sorted tar contents to txt file 
+# -> write stats of sorted tar contents to txt file
+#   -> size in bytes  
 # -> write script to actually produce sorted tars to seperate .sh file   
 
 # function to handle creation of meta files 
@@ -32,13 +33,20 @@ function create_metaf {
 function stat_month {
     local m="$1" 
     local marr=("${@:2}")
+    m_size=0
     if [ ${#marr[@]} == 0 ]; then
          return 
     fi
     echo -e "\n${m}" >> "$tyear"_stats.txt
     for f in "${marr[@]}"; do 
-        du -b "$f" >> "$tyear"_stats.txt
+        fstat=$(du -b "$f")
+        echo -e "$fstat" >> "$tyear"_stats.txt
+        fstatss="${fstat%%/*}"
+        fstatsi=$((fstatss))
+        m_size=$((m_size + fstatsi))
     done    
+    echo -e "Total size of ${m} tar: ${m_size}" >> "$tyear"_stats.txt
+    return $m_size
 }
 
 # function to generate script for a given month 
@@ -62,6 +70,9 @@ tyear=2021
 # array to store paths for found files in a month 
 ff=()
 
+# total size of all monthly tars 
+tsize=0 
+
 # create stat file and generate script in the local directory
 create_metaf "$tyear"_stats.txt 
 create_metaf "$tyear"_generate.sh
@@ -74,7 +85,11 @@ for m in "${months[@]}"; do
         ff+=("$file")
     done < <(find "$odir" -type f -name "*$ss*" -print0)
     stat_month "$m" "${ff[@]}"
+    mts=$?
+    tsize=$((tsize + mts))
 done
+
+echo -e "\nTotal size of all monthly tars: ${tsize}" >> "$tyear"_stats.txt
 
 # for testing 
 #for file in "${ff[@]}"; do
