@@ -1,6 +1,6 @@
 #!/bin/bash
 
-as=23820988579840
+as=23820406620160
 if ((${as} <= 34)); then
     echo "not enough space on current system"
     echo "available space: ${as}"

@@ -6,6 +6,8 @@
 # -> write stats of sorted tar contents to txt file
 #   -> size in bytes  
 # -> write script to actually produce sorted tars to seperate .sh file   
+# refactor {} out of strings when referencing vars?
+# instead of echo, pipe to stderr when return 1? 
 
 # function to handle creation of meta files 
 function create_metaf {
@@ -140,6 +142,50 @@ tsize=0
 
 # boolean to check if generated script has already been preloaded
 preloaded=false
+
+# booleans to check if flags were set 
+oset=false
+sset=false
+
+# handle passed flags/arguments
+while getopts ":o:s:y:h" opt; do
+    case $opt in
+        o)
+            odir="$OPTARG"
+            oset=true
+            ;;
+        s)
+            sdir="$OPTARG"
+            sset=true
+            ;;
+        y)
+            tyear="$OPTARG"
+            ;;
+        h)
+            echo "Given a directory and year, search it for all monthly files of the specified year and produce monthly tar files"
+            echo "Options:"
+            echo "  -o: Specify a path to the original directory that will be searched."
+            echo "  -s: Specify a path to the directory where tars will be stored. Creates the directory if it does not already exist."
+            echo "  -y: Specify a year to create monthly tars for."
+            echo "If no paths are passed, testing directories and files will be used instead."
+            exit 0
+            ;;
+        \?)
+            echo "Invalid option: -$OPTARG" >&2
+            exit 1
+            ;;
+        :)
+            echo "Option -$OPTARG requires an argument." >&2
+            exit 1
+            ;;
+    esac
+done
+
+# check if flags are valid 
+if [[ $oset != $sset ]]; then 
+    echo "Invalid options. -o and -s must either both be set or unset"
+    exit 1
+fi
 
 # create stat file and generate script in the local directory
 create_metaf "$tyear"_stats.txt 
