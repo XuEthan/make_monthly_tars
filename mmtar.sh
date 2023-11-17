@@ -59,14 +59,14 @@ function generate_month {
     tbp="tar -cvf ${sdir}/${tyear}_${m}.tar -C ${tyear} " 
     dq="\""
     for f in "${marr[@]}"; do 
-        tbp="$tbp $dq$f$dq "    
+        tbp="$tbp $dq$f$dq"    
     done
     echo -e "$tbp\n" >> "$tyear"_generate.sh
 }
 
 # function to preload generated script 
 function pre_load {
-    echo -e "#!/bin/bash" >> "$tyear"_generate.sh
+    echo -e "#!/bin/bash\n" >> "$tyear"_generate.sh
 }
 
 # months in the year 
