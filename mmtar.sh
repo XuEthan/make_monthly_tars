@@ -56,17 +56,67 @@ function generate_month {
     if [ ${#marr[@]} == 0 ]; then 
         return 
     fi
-    tbp="tar -cvf ${sdir}/${tyear}_${m}.tar -C ${tyear} " 
+    tbp="tar -cvf ${sdir}/${tyear}_${m}.tar -C ${tyear}" 
     dq="\""
     for f in "${marr[@]}"; do 
         tbp="$tbp $dq$f$dq"    
     done
-    echo -e "$tbp\n" >> "$tyear"_generate.sh
+    echo -e "$tbp" >> "$tyear"_generate.sh
+    echo -e "check_ret ${sdir}/${tyear}_${m}.tar ${sw_literal}" >> "$tyear"_generate.sh
 }
 
 # function to preload generated script 
 function pre_load {
+    local ts="$1"
+    outf="$tyear"_generate.sh
+
+    # check space on system before running
+    as_literal='${as}'
     echo -e "#!/bin/bash\n" >> "$tyear"_generate.sh
+    echo -e "as=$(df --output=avail -B 1 . | awk 'NR==2 {print $1}')" >> "$outf"
+    echo -e "if ((${as_literal} <= ${ts})); then" >> "$outf" 
+    echo -e "    echo \"not enough space on current system\"" >> "$outf"
+    echo -e "    echo \"available space: ${as_literal}\"" >> "$outf" 
+    echo -e "    echo \"combined size of all tars: ${ts}\"" >> "$outf"
+    echo -e "    exit 1" >> "$outf"
+    echo -e "fi\n" >> "$outf"   
+    
+    # check if the process is already running 
+    pid_literal='${0%%sh}'
+    p_literal='$pid'
+    process_literal='$$'
+    echo -e "pid=${pid_literal}pid" >> "$outf"
+    echo -e "if [ -f ${p_literal} ]; then" >> "$outf" 
+    echo -e "   echo \"process already running: ${p_literal}\"" >> "$outf"
+    echo -e "   exit 1" >> "$outf"
+    echo -e "else" >> "$outf"
+    echo -e "   echo ${process_literal} > ${p_literal}" >> "$outf"
+    echo -e "fi\n" >> "$outf"
+        
+    # check for panic file in local directory 
+    panic_literal='${0%%sh}'
+    p_literal='$panic'
+    echo -e "panic=${panic_literal}_panic.txt" >> "$outf"
+    echo -e "if [ -f ${p_literal} ]; then" >> "$outf"
+    echo -e "   echo \"panic file found, handle before rerunning\"" >> "$outf" 
+    echo -e "   exit 1" >> "$outf" 
+    echo -e "fi\n" >> "$outf"     
+    
+    # function to handle potential errors produced by tar commands 
+    one_literal='$1'
+    sw_literal='$*' 
+    r_literal='$ret'
+    m_literal='$msg'
+    echo -e "function check_ret {" >> "$outf"
+    echo -e "   msg=${one_literal}; shift" >> "$outf"
+    echo -e "   for ret in ${sw_literal}; do" >> "$outf"
+    echo -e "       if  [ ${r_literal} -ne 0]; then" >> "$outf"
+    echo -e "           echo ${m_literal} ${sw_literal} > ${p_literal}" >> "$outf"
+    echo -e "           echo \"error when creating tars, out -> ${p_literal}\"" >> "$outf"
+    echo -e "           exit 1" >> "$outf"
+    echo -e "       fi" >> "$outf"
+    echo -e "   done" >> "$outf"
+    echo -e "}\n" >> "$outf"              
 }
 
 # months in the year 
@@ -88,12 +138,12 @@ ff=()
 # total size of all monthly tars 
 tsize=0 
 
+# boolean to check if generated script has already been preloaded
+preloaded=false
+
 # create stat file and generate script in the local directory
 create_metaf "$tyear"_stats.txt 
 create_metaf "$tyear"_generate.sh
-
-# preload the shell script 
-pre_load
 
 # loop through all months of the year and process 
 for m in "${months[@]}"; do
@@ -105,6 +155,11 @@ for m in "${months[@]}"; do
     stat_month "$m" "${ff[@]}"
     mts=$?
     tsize=$((tsize + mts))
+    # preload the file once 
+    if [ "$preloaded" = false ]; then 
+        pre_load "$tsize"
+        preloaded=true
+    fi
     generate_month "$m" "${ff[@]}"    
 done
 
