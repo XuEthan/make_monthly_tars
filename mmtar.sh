@@ -8,6 +8,9 @@
 # -> write script to actually produce sorted tars to seperate .sh file   
 # refactor {} out of strings when referencing vars?
 # instead of echo, pipe to stderr when return 1? 
+# fix tar commands, reference output on server and compare to git  
+# put all folders that do not match the file format into its own tar file 
+# clean pid after running in generated script 
 
 # function to handle creation of meta files 
 function create_metaf {
@@ -61,7 +64,8 @@ function generate_month {
     tbp="tar -cvf ${sdir}/${tyear}_${m}.tar -C ${tyear}" 
     dq="\""
     for f in "${marr[@]}"; do 
-        tbp="$tbp $dq$f$dq"    
+        pf="${f##*/}"
+        tbp="$tbp $dq$pf$dq"    
     done
     echo -e "$tbp" >> "$tyear"_generate.sh
     echo -e "check_ret ${sdir}/${tyear}_${m}.tar ${sw_literal}" >> "$tyear"_generate.sh
@@ -71,10 +75,12 @@ function generate_month {
 function pre_load {
     local ts="$1"
     outf="$tyear"_generate.sh
+    echo -e "#!/bin/bash\n" >> "$outf"
+    pwd_literal='$(pwd)'
+    echo -e "curr_dir=${pwd_literal}\n" >> "$outf"
 
     # check space on system before running
     as_literal='${as}'
-    echo -e "#!/bin/bash\n" >> "$tyear"_generate.sh
     echo -e "as=$(df --output=avail -B 1 . | awk 'NR==2 {print $1}')" >> "$outf"
     echo -e "if ((${as_literal} <= ${ts})); then" >> "$outf" 
     echo -e "    echo \"not enough space on current system\"" >> "$outf"
@@ -118,7 +124,10 @@ function pre_load {
     echo -e "           exit 1" >> "$outf"
     echo -e "       fi" >> "$outf"
     echo -e "   done" >> "$outf"
-    echo -e "}\n" >> "$outf"              
+    echo -e "}\n" >> "$outf"   
+    
+    # change to the original directory to prepare for tarring     
+    echo -e "cd ${dq}${odir}${dq}" >> "$outf"       
 }
 
 # months in the year 
@@ -210,3 +219,8 @@ for m in "${months[@]}"; do
 done
 
 echo -e "\nTotal size of all monthly tars: ${tsize}" >> "$tyear"_stats.txt
+
+cd_literal='$curr_dir'
+echo -e "\ncd ${dq}${cd_literal}${dq}" >> "$outf"
+p_literal='$pid'
+echo -e "rm ${p_literal}" >> "$outf"

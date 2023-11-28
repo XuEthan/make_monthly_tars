@@ -1,10 +1,12 @@
 #!/bin/bash
 
-as=23820406620160
-if ((${as} <= 34)); then
+curr_dir=$(pwd)
+
+as=22456488165376
+if ((${as} <= 17)); then
     echo "not enough space on current system"
     echo "available space: ${as}"
-    echo "combined size of all tars: 34"
+    echo "combined size of all tars: 17"
     exit 1
 fi
 
@@ -33,9 +35,13 @@ function check_ret {
    done
 }
 
-tar -cvf /projects/ps-renlab/ecxu/mm_out_dir/2021_01.tar -C 2021 "/projects/ps-renlab/ecxu/mm_test_dir/01/2021_01_01_fish" "/projects/ps-renlab/ecxu/mm_test_dir/01/2021_01_01_taco" "/projects/ps-renlab/ecxu/mm_test_dir/01/2021_01_01_chip" "/projects/ps-renlab/ecxu/mm_test_dir/14/2021_01_14_taco" "/projects/ps-renlab/ecxu/mm_test_dir/14/2021_01_14_fish" "/projects/ps-renlab/ecxu/mm_test_dir/14/2021_01_14_chip" "/projects/ps-renlab/ecxu/mm_test_dir/2021/2021_01_14_taco" "/projects/ps-renlab/ecxu/mm_test_dir/2021/2021_01_14_fish" "/projects/ps-renlab/ecxu/mm_test_dir/2021/2021_01_01_chip" "/projects/ps-renlab/ecxu/mm_test_dir/2021/2021_01_28_chip" "/projects/ps-renlab/ecxu/mm_test_dir/2021/2021_01_14_chip" "/projects/ps-renlab/ecxu/mm_test_dir/2021/2021_01_01_fish" "/projects/ps-renlab/ecxu/mm_test_dir/2021/2021_01_01_taco" "/projects/ps-renlab/ecxu/mm_test_dir/2021/2021_01_28_taco" "/projects/ps-renlab/ecxu/mm_test_dir/2021/2021_01_28_fish" "/projects/ps-renlab/ecxu/mm_test_dir/28/2021_01_28_chip" "/projects/ps-renlab/ecxu/mm_test_dir/28/2021_01_28_taco" "/projects/ps-renlab/ecxu/mm_test_dir/28/2021_01_28_fish"
+cd /projects/ps-renlab/ecxu/mm_test_dir
+tar -cvf /projects/ps-renlab/ecxu/mm_out_dir/2021_01.tar -C 2021 "2021_01_14_taco" "2021_01_14_fish" "2021_01_01_chip" "2021_01_28_chip" "2021_01_14_chip" "2021_01_01_fish" "2021_01_01_taco" "2021_01_28_taco" "2021_01_28_fish"
 check_ret /projects/ps-renlab/ecxu/mm_out_dir/2021_01.tar $*
-tar -cvf /projects/ps-renlab/ecxu/mm_out_dir/2021_06.tar -C 2021 "/projects/ps-renlab/ecxu/mm_test_dir/2021/2021_06_14_fish" "/projects/ps-renlab/ecxu/mm_test_dir/2021/2021_06_28_chip" "/projects/ps-renlab/ecxu/mm_test_dir/2021/2021_06_01_chip"
+tar -cvf /projects/ps-renlab/ecxu/mm_out_dir/2021_06.tar -C 2021 "2021_06_14_fish" "2021_06_28_chip" "2021_06_01_chip"
 check_ret /projects/ps-renlab/ecxu/mm_out_dir/2021_06.tar $*
-tar -cvf /projects/ps-renlab/ecxu/mm_out_dir/2021_12.tar -C 2021 "/projects/ps-renlab/ecxu/mm_test_dir/2021/2021_12_28_chip" "/projects/ps-renlab/ecxu/mm_test_dir/2021/2021_12_01_chip" "/projects/ps-renlab/ecxu/mm_test_dir/2021/2021_12_14_fish"
+tar -cvf /projects/ps-renlab/ecxu/mm_out_dir/2021_12.tar -C 2021 "2021_12_28_chip" "2021_12_01_chip" "2021_12_14_fish"
 check_ret /projects/ps-renlab/ecxu/mm_out_dir/2021_12.tar $*
+
+cd "$curr_dir"
+rm $pid

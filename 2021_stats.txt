@@ -1,11 +1,5 @@
 
 01
-0	/projects/ps-renlab/ecxu/mm_test_dir/01/2021_01_01_fish
-0	/projects/ps-renlab/ecxu/mm_test_dir/01/2021_01_01_taco
-17	/projects/ps-renlab/ecxu/mm_test_dir/01/2021_01_01_chip
-0	/projects/ps-renlab/ecxu/mm_test_dir/14/2021_01_14_taco
-0	/projects/ps-renlab/ecxu/mm_test_dir/14/2021_01_14_fish
-0	/projects/ps-renlab/ecxu/mm_test_dir/14/2021_01_14_chip
 0	/projects/ps-renlab/ecxu/mm_test_dir/2021/2021_01_14_taco
 0	/projects/ps-renlab/ecxu/mm_test_dir/2021/2021_01_14_fish
 17	/projects/ps-renlab/ecxu/mm_test_dir/2021/2021_01_01_chip
@@ -15,10 +9,7 @@
 0	/projects/ps-renlab/ecxu/mm_test_dir/2021/2021_01_01_taco
 0	/projects/ps-renlab/ecxu/mm_test_dir/2021/2021_01_28_taco
 0	/projects/ps-renlab/ecxu/mm_test_dir/2021/2021_01_28_fish
-0	/projects/ps-renlab/ecxu/mm_test_dir/28/2021_01_28_chip
-0	/projects/ps-renlab/ecxu/mm_test_dir/28/2021_01_28_taco
-0	/projects/ps-renlab/ecxu/mm_test_dir/28/2021_01_28_fish
-Total size of 01 tar: 34
+Total size of 01 tar: 17
 
 06
 0	/projects/ps-renlab/ecxu/mm_test_dir/2021/2021_06_14_fish
@@ -32,4 +23,4 @@ Total size of 06 tar: 0
 0	/projects/ps-renlab/ecxu/mm_test_dir/2021/2021_12_14_fish
 Total size of 12 tar: 0
 
-Total size of all monthly tars: 34
+Total size of all monthly tars: 17
