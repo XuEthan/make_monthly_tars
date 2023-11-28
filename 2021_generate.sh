@@ -2,7 +2,7 @@
 
 curr_dir=$(pwd)
 
-as=22456487116800
+as=22456486068224
 if ((${as} <= 17)); then
     echo "not enough space on current system"
     echo "available space: ${as}"

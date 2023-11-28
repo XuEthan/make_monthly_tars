@@ -8,7 +8,9 @@
 # -> write script to actually produce sorted tars to seperate .sh file   
 # refactor {} out of strings when referencing vars?
 # instead of echo, pipe to stderr when return 1? 
-# refactor outf 
+# refactor outf
+# fix total space inconsistency
+# refactor where preload occurs (remove flag, passed argument, etc)  
 
 # function to handle creation of meta files 
 function create_metaf {
@@ -216,8 +218,6 @@ for m in "${months[@]}"; do
     generate_month "$m" "${ff[@]}"    
 done
 
-echo -e "\nTotal size of all monthly tars: ${tsize}" >> "$tyear"_stats.txt
-
 # search for all miscellaneous files
 odiry="${odir}"/"$tyear" 
 files=$(find "$odiry" -type f) 
@@ -230,14 +230,31 @@ for file in $files; do
     fi
 done
 
-# misc files should exist in their own tar 
-tbp="tar -cvf ${sdir}/${tyear}_misc.tar -C ${tyear}"
-for f in "${nf[@]}"; do 
-    pf="${f##*/}"
-    tbp="$tbp $dq$pf$dq"
-done
-echo -e "$tbp" >> "$outf"
-echo -e "check_ret ${sdir}/${tyear}_misc.tar ${sw_literal}" >> "$outf"
+if [ ${#nf[@]} != 0 ]; then
+    # stat misc files 
+    m_size=0
+    echo -e "\nmiscellaneous" >> "$tyear"_stats.txt
+    for f in "${nf[@]}"; do
+        fstat=$(du -b "$f")
+        echo -e "$fstat" >> "$tyear"_stats.txt
+        fstatss="${fstat%%/*}"
+        fstatsi=$((fstatss))
+        m_size=$((m_size + fstatsi))
+    done
+    echo -e "Total size of miscellaneous tar: ${m_size}" >> "$tyear"_stats.txt 
+    tsize=$((tsize + m_size))   
+ 
+    # misc files should exist in their own tar 
+    tbp="tar -cvf ${sdir}/${tyear}_misc.tar -C ${tyear}"
+    for f in "${nf[@]}"; do 
+        pf="${f##*/}"
+        tbp="$tbp $dq$pf$dq"
+    done
+    echo -e "$tbp" >> "$outf"
+    echo -e "check_ret ${sdir}/${tyear}_misc.tar ${sw_literal}" >> "$outf"
+fi
+
+echo -e "\nTotal size of all monthly tars: ${tsize}" >> "$tyear"_stats.txt
 
 # handle pid post run 
 cd_literal='$curr_dir'
