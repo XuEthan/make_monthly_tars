@@ -2,7 +2,7 @@
 
 curr_dir=$(pwd)
 
-as=22456488165376
+as=22456487116800
 if ((${as} <= 17)); then
     echo "not enough space on current system"
     echo "available space: ${as}"
@@ -42,6 +42,8 @@ tar -cvf /projects/ps-renlab/ecxu/mm_out_dir/2021_06.tar -C 2021 "2021_06_14_fis
 check_ret /projects/ps-renlab/ecxu/mm_out_dir/2021_06.tar $*
 tar -cvf /projects/ps-renlab/ecxu/mm_out_dir/2021_12.tar -C 2021 "2021_12_28_chip" "2021_12_01_chip" "2021_12_14_fish"
 check_ret /projects/ps-renlab/ecxu/mm_out_dir/2021_12.tar $*
+tar -cvf /projects/ps-renlab/ecxu/mm_out_dir/2021_misc.tar -C 2021 "randomfile1" "2021.txt" "randomfile2" "randomfile3"
+check_ret /projects/ps-renlab/ecxu/mm_out_dir/2021_misc.tar $*
 
 cd "$curr_dir"
 rm $pid

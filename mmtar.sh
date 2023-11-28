@@ -8,9 +8,7 @@
 # -> write script to actually produce sorted tars to seperate .sh file   
 # refactor {} out of strings when referencing vars?
 # instead of echo, pipe to stderr when return 1? 
-# fix tar commands, reference output on server and compare to git  
-# put all folders that do not match the file format into its own tar file 
-# clean pid after running in generated script 
+# refactor outf 
 
 # function to handle creation of meta files 
 function create_metaf {
@@ -220,6 +218,28 @@ done
 
 echo -e "\nTotal size of all monthly tars: ${tsize}" >> "$tyear"_stats.txt
 
+# search for all miscellaneous files
+odiry="${odir}"/"$tyear" 
+files=$(find "$odiry" -type f) 
+pattern="[0-9][0-9][0-9][0-9]_[0-1][0-9]_[0-3][0-9]_.*"
+nf=()
+for file in $files; do 
+    fname=$(basename "$file")
+    if ! echo "$fname" | grep -qE "$pattern"; then
+        nf+=("$file")
+    fi
+done
+
+# misc files should exist in their own tar 
+tbp="tar -cvf ${sdir}/${tyear}_misc.tar -C ${tyear}"
+for f in "${nf[@]}"; do 
+    pf="${f##*/}"
+    tbp="$tbp $dq$pf$dq"
+done
+echo -e "$tbp" >> "$outf"
+echo -e "check_ret ${sdir}/${tyear}_misc.tar ${sw_literal}" >> "$outf"
+
+# handle pid post run 
 cd_literal='$curr_dir'
 echo -e "\ncd ${dq}${cd_literal}${dq}" >> "$outf"
 p_literal='$pid'
